@@ -7,11 +7,11 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
 import Link from "@material-ui/core/Link";
-import CardMedia from "@material-ui/core/CardMedia";
+import GradeOutlinedIcon from "@material-ui/icons/GradeOutlined";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    maxWidth: 500,
+    maxWidth: "90%",
     margin: theme.spacing(2),
   },
   avatar: {
@@ -23,6 +23,20 @@ const useStyles = makeStyles((theme) => ({
   },
   repoTitle: {
     margin: theme.spacing(1),
+  },
+  repoName: {
+    padding: theme.spacing(1),
+  },
+  repoUrl: {
+    padding: theme.spacing(1),
+  },
+  repoLanguage: {
+    padding: theme.spacing(1),
+  },
+  repoTypography: {
+    textTransform: "uppercase",
+    fontWeight: "bold",
+    marginLeft: theme.spacing(1),
   },
 }));
 
@@ -59,22 +73,33 @@ const GithubProfile = (props) => {
           Repositórios
         </Typography>
 
-        <Grid container direction="column">
-          {repo.name.map((item) => (
-            <div>
-              <Typography>{item}</Typography>
-            </div>
-          ))}
-          {repo.name.map((item) => (
-            <div>
-              <Typography>{item}</Typography>
-            </div>
-          ))}
-          {repo.name.map((item) => (
-            <div>
-              <Typography>{item}</Typography>
-            </div>
-          ))}
+        <Grid container direction="row">
+          <Grid className={classes.repoName}>
+            {repo.name.map((item) => (
+              <Grid container direction="row" alignItems="center">
+                <GradeOutlinedIcon fontSize="small" />
+                <Typography className={classes.repoTypography}>
+                  {item}
+                </Typography>
+              </Grid>
+            ))}
+          </Grid>
+          <Grid className={classes.repoUrl}>
+            {repo.url.map((item) => (
+              <div>
+                <Typography>
+                  <Link href={item}>{item}</Link>
+                </Typography>
+              </div>
+            ))}
+          </Grid>
+          <Grid className={classes.repoLanguage}>
+            {repo.language.map((item) => (
+              <div>
+                <Typography>{item}</Typography>
+              </div>
+            ))}
+          </Grid>
         </Grid>
       </Grid>
     </Card>

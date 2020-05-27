@@ -75,7 +75,9 @@ const SearchRepo = () => {
             <SearchIcon fontSize="large" />
           </IconButton>
         </Grid>
-        <Grid>{repo.user ? OpenProfile(repo) : <SkeletonProfile />}</Grid>
+        <Grid container justify="center" alignItems="center">
+          {repo.user ? OpenProfile(repo) : <SkeletonProfile />}
+        </Grid>
       </Grid>
     </div>
   );
