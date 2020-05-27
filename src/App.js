@@ -6,15 +6,18 @@ import "./App.css";
 
 import Routes from "./Routes";
 import theme from "./theme";
+import { IssuesProvider } from "./components/RepoIssues";
 
 const History = createBrowserHistory();
 
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Router history={History}>
-        <Routes />
-      </Router>
+      <IssuesProvider>
+        <Router history={History}>
+          <Routes />
+        </Router>
+      </IssuesProvider>
     </ThemeProvider>
   );
 };

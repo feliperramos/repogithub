@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { Link as LinkRouter } from "react-router-dom";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -7,7 +8,13 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
 import Link from "@material-ui/core/Link";
+import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
 import GradeOutlinedIcon from "@material-ui/icons/GradeOutlined";
+import AssignmentOutlinedIcon from "@material-ui/icons/AssignmentOutlined";
+
+import { Icons } from "../../../../components/LanguageIcons";
+import { IssuesContext } from "../../../../components/RepoIssues";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -38,6 +45,16 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     marginLeft: theme.spacing(1),
   },
+  icons: {
+    width: 17,
+    height: 17,
+    margin: theme.spacing(1),
+  },
+  issues: {
+    width: 17,
+    height: 17,
+    margin: 4.75,
+  },
 }));
 
 const GithubProfile = (props) => {
@@ -53,6 +70,13 @@ const GithubProfile = (props) => {
     repo.url.push(item.html_url);
     repo.language.push(item.language);
   });
+
+  const issuesContext = useContext(IssuesContext);
+
+  const handleIssues = (name, repo) => {
+    issuesContext.name = name;
+    issuesContext.repo = repo;
+  };
 
   return (
     <Card className={classes.card}>
@@ -76,7 +100,12 @@ const GithubProfile = (props) => {
         <Grid container direction="row">
           <Grid className={classes.repoName}>
             {repo.name.map((item) => (
-              <Grid container direction="row" alignItems="center">
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                className={classes.repoTitle}
+              >
                 <GradeOutlinedIcon fontSize="small" />
                 <Typography className={classes.repoTypography}>
                   {item}
@@ -87,7 +116,7 @@ const GithubProfile = (props) => {
           <Grid className={classes.repoUrl}>
             {repo.url.map((item) => (
               <div>
-                <Typography>
+                <Typography className={classes.repoTitle}>
                   <Link href={item}>{item}</Link>
                 </Typography>
               </div>
@@ -95,9 +124,33 @@ const GithubProfile = (props) => {
           </Grid>
           <Grid className={classes.repoLanguage}>
             {repo.language.map((item) => (
-              <div>
+              <Grid container direction="row" alignItems="center">
+                {Icons.map((i) =>
+                  i.id === item ? (
+                    <img alt={item} src={i.img} className={classes.icons} />
+                  ) : (
+                    ""
+                  )
+                )}
                 <Typography>{item}</Typography>
-              </div>
+              </Grid>
+            ))}
+          </Grid>
+          <Grid className={classes.repoUrl}>
+            {repo.name.map((item) => (
+              <Grid>
+                <Tooltip title="Issues" placement="right">
+                  <IconButton
+                    component={LinkRouter}
+                    to="/issues"
+                    size="small"
+                    className={classes.issues}
+                    onClick={handleIssues(item, user.login)}
+                  >
+                    <AssignmentOutlinedIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
             ))}
           </Grid>
         </Grid>
