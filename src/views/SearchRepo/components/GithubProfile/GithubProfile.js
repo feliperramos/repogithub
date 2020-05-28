@@ -72,10 +72,6 @@ const GithubProfile = (props) => {
     repo.language.push(item.language);
   });
 
-  //const [repoIssues, setRepoIssues] = useState("");
-
-  const issuesContext = useContext(IssuesContext);
-
   const fetchRepoIssues = async (repo) => {
     const resp = await ApiRequest("repos/", repo, "", 3, user.login);
 
