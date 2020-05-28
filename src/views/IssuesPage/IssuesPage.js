@@ -1,78 +1,92 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/styles";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import Typography from "@material-ui/core/Typography";
+import Chip from "@material-ui/core/Chip";
+import Avatar from "@material-ui/core/Avatar/";
 
-import { IssuesContext } from "../../components/RepoIssues";
-import { ApiRequest } from "../../api";
 import { Divider } from "@material-ui/core";
 
 const style = makeStyles((theme) => ({
   card: {
-    maxWidth: "100%",
+    width: "40%",
     margin: theme.spacing(2),
   },
   title: {
-    margin: theme.spacing(1),
+    textTransform: "uppercase",
+    fontWeight: "bold",
   },
   grid: {
     margin: theme.spacing(2),
+  },
+  description: {
+    margin: theme.spacing(1),
+    fontSize: 12,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+  },
+  user: {
+    fontSize: 14,
+    marginLeft: theme.spacing(0.5),
+  },
+  chipOpen: {
+    backgroundColor: "#5cad69",
+    color: "#ffffff",
+    fontWeight: "bold",
   },
 }));
 
 const IssuesPage = () => {
   const classes = style();
-  const issuesContext = useContext(IssuesContext);
-  const [issues, setIssues] = useState();
-
-  const issuesList = {
-    title: [],
-    user: [],
-    status: [],
-    type: [],
-    description: [],
-  };
-  const fetchIssue = useCallback(async () => {
-    const resp = await ApiRequest(
-      "repos/",
-      issuesContext.name,
-      "",
-      3,
-      issuesContext.repo
-    );
-
-    setIssues(resp.data);
-  }, [issuesContext.name, issuesContext.repo]);
-
-  issues
-    ? issues.forEach((item) => {
-        issuesList.title.push(item.issue.title);
-        issuesList.user.push(item.actor.login);
-        issuesList.status.push(item.issue.state);
-        issuesList.type.push(item.issue.labels[0].name);
-        issuesList.description.push(item.issue.body);
-      })
-    : fetchIssue();
-
-  useEffect(() => {
-    fetchIssue();
-  }, [fetchIssue]);
+  const list = JSON.parse(window.localStorage.getItem("repo"));
 
   return (
     <Grid container justify="center" direction="column">
+      {console.log(list.data)}
       <Grid container justify="center">
         <Typography variant="h3">Issues</Typography>
       </Grid>
       <Grid container justify="center" direction="row">
-        {issuesList.title.map((title) =>
-          issuesList.user.map((user) => (
-            <Card className={classes.card}>
-              <CardHeader title={title} subheader={user} />
-            </Card>
-          ))
-        )}
+        {list.data.map((i) => (
+          <Card className={classes.card}>
+            <CardHeader
+              avatar={
+                <Avatar src={i.actor.avatar_url} className={classes.avatar} />
+              }
+              title={
+                <Typography className={classes.title} color="default">
+                  {i.issue.title}
+                </Typography>
+              }
+              subheader={
+                <Grid container direction="row" alignItems="center">
+                  {i.issue.state === "open" ? (
+                    <Chip
+                      label={i.issue.state}
+                      size="small"
+                      className={classes.chipOpen}
+                    />
+                  ) : (
+                    <Chip label={i.issue.state} size="small" />
+                  )}
+                  <Typography className={classes.user} color="textSecondary">
+                    {i.actor.login}
+                  </Typography>
+                </Grid>
+              }
+            />
+            <Divider />
+            <Grid>
+              <Typography className={classes.description}>
+                {i.issue.body}
+              </Typography>
+            </Grid>
+          </Card>
+        ))}
       </Grid>
     </Grid>
   );

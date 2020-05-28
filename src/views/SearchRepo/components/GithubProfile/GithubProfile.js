@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as LinkRouter } from "react-router-dom";
 import Card from "@material-ui/core/Card";
@@ -15,6 +15,7 @@ import AssignmentOutlinedIcon from "@material-ui/icons/AssignmentOutlined";
 
 import { Icons } from "../../../../components/LanguageIcons";
 import { IssuesContext } from "../../../../components/RepoIssues";
+import { ApiRequest } from "../../../../api";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -71,11 +72,18 @@ const GithubProfile = (props) => {
     repo.language.push(item.language);
   });
 
+  //const [repoIssues, setRepoIssues] = useState("");
+
   const issuesContext = useContext(IssuesContext);
 
-  const handleIssues = (name, repo) => {
-    issuesContext.name = name;
-    issuesContext.repo = repo;
+  const fetchRepoIssues = async (repo) => {
+    const resp = await ApiRequest("repos/", repo, "", 3, user.login);
+
+    window.localStorage.setItem("repo", JSON.stringify(resp));
+  };
+
+  const handleIssues = async (repo) => {
+    await fetchRepoIssues(repo);
   };
 
   return (
@@ -145,7 +153,7 @@ const GithubProfile = (props) => {
                     to="/issues"
                     size="small"
                     className={classes.issues}
-                    onClick={handleIssues(item, user.login)}
+                    onClick={() => handleIssues(item)}
                   >
                     <AssignmentOutlinedIcon fontSize="small" />
                   </IconButton>
