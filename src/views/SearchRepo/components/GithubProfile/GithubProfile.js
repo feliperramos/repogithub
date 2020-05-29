@@ -14,7 +14,6 @@ import GradeOutlinedIcon from "@material-ui/icons/GradeOutlined";
 import AssignmentOutlinedIcon from "@material-ui/icons/AssignmentOutlined";
 
 import { Icons } from "../../../../components/LanguageIcons";
-import { IssuesContext } from "../../../../components/RepoIssues";
 import { ApiRequest } from "../../../../api";
 
 const useStyles = makeStyles((theme) => ({
