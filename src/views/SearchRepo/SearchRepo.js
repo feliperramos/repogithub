@@ -69,7 +69,7 @@ const SearchRepo = () => {
             src="/github.png"
             style={{ width: 50, height: 50, marginRight: 10 }}
           />
-          <Typography variant="h3">GitHub Repos</Typography>
+          <Typography variant="h3">add Repos</Typography>
         </Grid>
         <Grid alignItems="center" className={classes.search} item>
           <TextField
